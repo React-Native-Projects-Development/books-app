@@ -1,43 +1,25 @@
-import React from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, FlatList, Image} from 'react-native';
 
 const EbookScreen = (props) => {
-  const data = [
-    {id: 'b1', title: 'Some title'},
-    {id: 'b2', title: 'Some title'},
-    {id: 'b3', title: 'Some title'},
-    {id: 'b4', title: 'Some title'},
-    {id: 'b5', title: 'Some title'},
-    {id: 'b6', title: 'Some title'},
-    {id: 'b7', title: 'Some title'},
-    {id: 'b8', title: 'Some title'},
-    {id: 'b9', title: 'Some title'},
-    {id: 'b10', title: 'Some title'},
-    {id: 'b11', title: 'Some title'},
-    {id: 'b12', title: 'Some title'},
-    {id: 'b13', title: 'Some title'},
-    {id: 'b14', title: 'Some title'},
-    {id: 'b15', title: 'Some title'},
-    {id: 'b16', title: 'Some title'},
-    {id: 'b17', title: 'Some title'},
-    {id: 'b18', title: 'Some title'},
-    {id: 'b19', title: 'Some title'},
-    {id: 'b20', title: 'Some title'},
-    {id: 'b21', title: 'Some title'},
-    {id: 'b22', title: 'Some title'},
-    {id: 'b23', title: 'Some title'},
-    {id: 'b24', title: 'Some title'},
-    {id: 'b25', title: 'Some title'},
-    {id: 'b26', title: 'Some title'},
-    {id: 'b27', title: 'Some title'},
-    {id: 'b28', title: 'Some title'},
-    {id: 'b29', title: 'Some title'},
-    {id: 'b30', title: 'Some title'},
-  ];
+  const API_KEY = 'AIzaSyAl2L0iYk5z4SNjcFGFIBkQvk4ixiSxXM8';
+
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=lord+of+the+rings&key=${API_KEY}`,
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setBooks(result.items);
+      });
+  }, []);
+
   return (
     <View style={styles.screen}>
       <FlatList
-        data={data}
+        data={books}
         numColumns={2}
         renderItem={({item, index}) => (
           <View
@@ -53,11 +35,13 @@ const EbookScreen = (props) => {
                 borderWidth: 1,
                 margin: 5,
                 borderRadius: 10,
-                padding: 10,
-                zIndex: index % 2 !== 0 ? 15 : 0,
+                overflow: 'hidden',
               }}>
               <View style={{flex: 1}}>
-                <Text>{item.title}</Text>
+                <Image
+                  source={{uri: item.volumeInfo.imageLinks?.thumbnail}}
+                  style={{width: '100%', height: '100%'}}
+                />
               </View>
             </View>
           </View>
